@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Product catalog item with reference and pricing details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique reference code of the product" },
+        "referencia": { "type": "string", "description": "Reference code" },
+        "descricao": { "type": "string", "description": "Description of the product" },
+        "grupo": { "type": "string", "description": "Group/category of the product" },
+        "modelo": { "type": "string", "description": "Model or brand of the product" },
+        "precoAntigo": { "type": "number", "description": "Original price" },
+        "precoNovo": { "type": "number", "description": "Promotional/current price" },
+        "importId": { "type": "string", "description": "The ID of the batch import" },
+        "importedAt": { "type": "string", "description": "Timestamp of import" }
+      },
+      "required": ["id", "referencia", "descricao", "grupo", "modelo", "precoNovo", "importId", "importedAt"]
+    },
+    "ImportRecord": {
+      "title": "ImportRecord",
+      "description": "Information about a PDF price list import batch",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique auto-generated ID" },
+        "fileName": { "type": "string", "description": "Name of the imported file" },
+        "importedAt": { "type": "string", "description": "Timestamp of import" },
+        "itemsCount": { "type": "number", "description": "Number of products parsed" },
+        "startDate": { "type": "string", "description": "Start date of the promotion" },
+        "endDate": { "type": "string", "description": "End date of the promotion" },
+        "observation": { "type": "string", "description": "Observations/brand of the promotion" }
+      },
+      "required": ["fileName", "importedAt", "itemsCount"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of all products in the store catalog"
+    },
+    "/imports/{importId}": {
+      "schema": "ImportRecord",
+      "description": "Records of each PDF price sheet imported"
+    }
+  }
+}

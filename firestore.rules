@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default-deny all resources
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Products collection
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if isValidProduct(request.resource.data);
+      allow delete: if false;
+    }
+
+    // 3. Imports collection
+    match /imports/{importId} {
+      allow read: if true;
+      allow create, update: if isValidImport(request.resource.data);
+      allow delete: if false;
+    }
+
+    // Schema Validation Helper for Products
+    function isValidProduct(data) {
+      return data.keys().hasAll(['id', 'referencia', 'descricao', 'grupo', 'modelo', 'precoAntigo', 'precoNovo', 'importId', 'importedAt'])
+        && data.keys().size() == 9
+        && data.id is string && data.id.size() <= 128
+        && data.referencia is string && data.referencia.size() <= 64
+        && data.descricao is string && data.descricao.size() <= 500
+        && data.grupo is string && data.grupo.size() <= 128
+        && data.modelo is string && data.modelo.size() <= 128
+        && (data.precoAntigo is number || data.precoAntigo is int || data.precoAntigo is float)
+        && (data.precoNovo is number || data.precoNovo is int || data.precoNovo is float)
+        && data.importId is string && data.importId.size() <= 128
+        && data.importedAt is string && data.importedAt.size() <= 128;
+    }
+
+    // Schema Validation Helper for Imports
+    function isValidImport(data) {
+      return data.keys().hasAll(['fileName', 'importedAt', 'itemsCount', 'startDate', 'endDate', 'observation'])
+        && data.keys().size() == 6
+        && data.fileName is string && data.fileName.size() <= 256
+        && data.importedAt is string && data.importedAt.size() <= 128
+        && (data.itemsCount is int || data.itemsCount is number)
+        && data.startDate is string && data.startDate.size() <= 64
+        && data.endDate is string && data.endDate.size() <= 64
+        && data.observation is string && data.observation.size() <= 512;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Consulta de Preços",
+  "description": "Aplicativo para consulta de preços de produtos com importação de relatórios PDF, filtros por grupo e modelo, e busca em tempo real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
